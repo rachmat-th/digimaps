@@ -13,6 +13,8 @@ import {
 import {
   ArrowLeft,
   Calendar,
+  ChevronLeft,
+  ChevronRight,
   Download,
   ExternalLink,
   Eye,
@@ -301,7 +303,7 @@ export default function DatabasePage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950">
-      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8 pb-8 sm:pb-12 md:pb-16">
         {/* Header - responsive */}
         <div className="mb-4 sm:mb-6 md:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3 sm:gap-4">
@@ -646,18 +648,22 @@ export default function DatabasePage() {
               ))}
             </div>
 
-            {/* Pagination - responsive */}
+            {/* Pagination - responsive with arrow buttons */}
             {filteredBusinesses.length > itemsPerPage && (
-              <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-2">
+              <div className="mt-4 sm:mt-6 flex items-center justify-center gap-2">
+                {/* Previous Arrow Button */}
                 <Button
                   onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                   disabled={safeCurrentPage === 1}
                   variant="outline"
-                  className="w-full sm:w-auto h-8 sm:h-9 px-3 text-xs sm:text-sm disabled:opacity-50"
+                  size="icon"
+                  className="h-8 w-8 sm:h-9 sm:w-9 disabled:opacity-50"
+                  title="Sebelumnya"
                 >
-                  Sebelumnya
+                  <ChevronLeft className="h-4 w-4" />
                 </Button>
                 
+                {/* Page Numbers */}
                 <div className="flex gap-1 flex-wrap justify-center">
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
                     if (
@@ -690,13 +696,16 @@ export default function DatabasePage() {
                   })}
                 </div>
 
+                {/* Next Arrow Button */}
                 <Button
                   onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                   disabled={safeCurrentPage === totalPages}
                   variant="outline"
-                  className="w-full sm:w-auto h-8 sm:h-9 px-3 text-xs sm:text-sm disabled:opacity-50"
+                  size="icon"
+                  className="h-8 w-8 sm:h-9 sm:w-9 disabled:opacity-50"
+                  title="Selanjutnya"
                 >
-                  Selanjutnya
+                  <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
             )}
