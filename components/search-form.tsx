@@ -33,6 +33,7 @@ export default function SearchForm() {
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [step, setStep] = useState<"province" | "city">("province");
   const [commandKey, setCommandKey] = useState(0); // For tracking, not controlling
+  const [showLocationHint, setShowLocationHint] = useState(false);
 
   const cities = province ? indonesiaCities[province] : [];
   const hasLocation = province && city;
@@ -140,6 +141,7 @@ export default function SearchForm() {
     setCity(selectedCity);
     setIsLocationOpen(false);
     setStep("province");
+    setShowLocationHint(false); // Hide hint after location is selected
     setCommandKey(prev => prev + 1); // Force remount untuk clear search
   };
 
@@ -162,10 +164,10 @@ export default function SearchForm() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1 }}
         onSubmit={handleSubmit}
-        className="space-y-4 sm:space-y-5"
+        className="space-y-0"
       >
         {/* Search Bar with Location Badge/Icon Toggle - responsive */}
-        <div className="relative">
+        <div className="relative mb-4 sm:mb-5">
           <div className="flex h-12 sm:h-14 items-center gap-2 sm:gap-3 rounded-full border border-zinc-300 bg-white px-3 sm:px-5 shadow-sm transition-shadow hover:shadow-md focus-within:shadow-md dark:border-zinc-600 dark:bg-white">
             {/* Search Icon */}
             <Search className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 text-zinc-400 dark:text-zinc-500" />
@@ -175,7 +177,16 @@ export default function SearchForm() {
               type="text"
               placeholder="Cari (Restaurant, Cafe, Hospital)"
               value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
+              onChange={(e) => {
+                setKeyword(e.target.value);
+                // Show location hint when user starts typing but hasn't selected location
+                if (e.target.value.length > 2 && !hasLocation) {
+                  setShowLocationHint(true);
+                } else if (e.target.value.length <= 2) {
+                  // Hide hint when user deletes text
+                  setShowLocationHint(false);
+                }
+              }}
               disabled={globalScraping.isLoading}
               className="flex-1 bg-transparent text-sm sm:text-base outline-none placeholder:text-zinc-400 dark:text-zinc-900 dark:placeholder:text-zinc-500"
             />
@@ -200,16 +211,37 @@ export default function SearchForm() {
                 </button>
               </Badge>
             ) : (
-              <Popover open={isLocationOpen} onOpenChange={(open) => {
-                setIsLocationOpen(open);
-                if (open) {
-                  setCommandKey(prev => prev + 1); // Clear search saat popover dibuka
-                }
-              }}>
-                <PopoverTrigger className="rounded-full p-1.5 sm:p-2 text-rose-600 transition-colors hover:bg-zinc-100 dark:text-rose-600 dark:hover:bg-zinc-200" title="Select location">
-                  <MapPinIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-                </PopoverTrigger>
-                <PopoverContent className="w-[280px] sm:w-[320px] p-0" align="end">
+              <div className="relative">
+                {/* Animated pulse ring when hint is shown */}
+                {showLocationHint && (
+                  <motion.div
+                    className="absolute inset-0 rounded-full bg-rose-400"
+                    initial={{ scale: 1, opacity: 0.6 }}
+                    animate={{ 
+                      scale: [1, 1.5, 1],
+                      opacity: [0.6, 0, 0.6]
+                    }}
+                    transition={{ 
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  />
+                )}
+                <Popover open={isLocationOpen} onOpenChange={(open) => {
+                  setIsLocationOpen(open);
+                  if (open) {
+                    setShowLocationHint(false); // Hide hint when popover opens
+                    setCommandKey(prev => prev + 1); // Clear search saat popover dibuka
+                  }
+                }}>
+                  <PopoverTrigger 
+                    className="relative rounded-full p-1.5 sm:p-2 text-rose-600 transition-colors hover:bg-zinc-100 dark:text-rose-600 dark:hover:bg-zinc-200" 
+                    title="Pilih lokasi"
+                  >
+                    <MapPinIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[280px] sm:w-[320px] p-0" align="end">
                   <Command key={commandKey} className="rounded-lg border-0">
                     <CommandInput 
                       placeholder={step === "province" ? "Cari provinsi..." : "Cari kota..."}
@@ -274,12 +306,33 @@ export default function SearchForm() {
                   </Command>
                 </PopoverContent>
               </Popover>
+              </div>
             )}
           </div>
+          
+          {/* Helper text - shows when user has typed but no location selected */}
+          {keyword.length > 2 && !hasLocation && showLocationHint && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="mt-4 flex items-center justify-center gap-2 px-4"
+            >
+              <motion.div
+                animate={{ x: [0, 5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                <MapPinIcon className="h-4 w-4 text-rose-500" />
+              </motion.div>
+              <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                Klik icon lokasi untuk memilih kota
+              </p>
+            </motion.div>
+          )}
         </div>
 
         {/* Submit Button with Animated Border - responsive */}
-        <div className="flex flex-col items-center gap-3 sm:gap-4 pt-2 sm:pt-3">
+        <div className="flex flex-col items-center gap-3 sm:gap-4 mt-6 sm:mt-8">
           <div className="relative">
             {/* Animated Progress Ring with Gradient - Ultra Vibrant */}
             {globalScraping.isLoading && (
