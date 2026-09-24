@@ -12,7 +12,19 @@ const geistSans = Geist({
 
 export const metadata: Metadata = {
   title: "Digimaps - Google Maps Lead Scraper",
-  description: "Extract business data from Google Maps with ease",
+  description: "Extract business data from Google Maps with ease. Scrape contact info, locations, and websites effortlessly.",
+  openGraph: {
+    title: "Digimaps - Google Maps Lead Scraper",
+    description: "Extract business data from Google Maps with ease. Scrape contact info, locations, and websites effortlessly.",
+    siteName: 'Digimaps',
+    locale: 'id_ID',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Digimaps - Google Maps Lead Scraper",
+    description: "Extract business data from Google Maps with ease. Scrape contact info, locations, and websites effortlessly.",
+  },
 };
 
 export default function RootLayout({
