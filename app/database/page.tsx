@@ -301,93 +301,97 @@ export default function DatabasePage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8">
+        {/* Header - responsive */}
+        <div className="mb-4 sm:mb-6 md:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <Link
               href="/"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-100 text-zinc-900 transition-all hover:bg-zinc-200 dark:bg-zinc-800/40 dark:backdrop-blur-md dark:text-white dark:hover:bg-zinc-700/60"
+              className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-zinc-100 text-zinc-900 transition-all hover:bg-zinc-200 dark:bg-zinc-800/40 dark:backdrop-blur-md dark:text-white dark:hover:bg-zinc-700/60"
             >
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
             </Link>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">
                 Database
               </h1>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
                 {filteredBusinesses.length > 0
-                  ? `Showing ${startIndex + 1}-${Math.min(endIndex, filteredBusinesses.length)} of ${filteredBusinesses.length} businesses`
-                  : `${businesses.length} businesses total`}
+                  ? `${startIndex + 1}-${Math.min(endIndex, filteredBusinesses.length)} dari ${filteredBusinesses.length}`
+                  : `${businesses.length} total`}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <Button
               onClick={handleExport}
               disabled={filteredBusinesses.length === 0}
-              className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-zinc-900 dark:hover:bg-zinc-800 disabled:opacity-50"
+              className="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white dark:bg-zinc-900 dark:hover:bg-zinc-800 disabled:opacity-50 text-xs sm:text-sm h-9 sm:h-10"
             >
-              <Download className="mr-2 h-4 w-4" />
-              Export CSV
+              <Download className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span className="hidden xs:inline">Export CSV</span>
+              <span className="xs:hidden">Export</span>
             </Button>
             <ThemeToggle />
           </div>
         </div>
 
-        {/* Filters - Compact */}
+        {/* Filters - Compact and responsive */}
         {businesses.length > 0 && (
-          <div className="mb-6 flex gap-3 items-center">
-            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row gap-2 sm:gap-3 sm:items-center">
+            <span className="text-xs sm:text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Filter:
             </span>
-            <Select
-              value={filterQuery}
-              onValueChange={(value) => {
-                setFilterQuery(value || "all");
-                setCurrentPage(1);
-              }}
-            >
-              <SelectTrigger className="w-[220px] h-9 text-sm bg-white dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700">
-                <SelectValue placeholder="Search Query" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Search Queries</SelectItem>
-                {searchQueries.map((query) => (
-                  <SelectItem key={query} value={query}>
-                    {query}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="flex gap-2 sm:gap-3">
+              <Select
+                value={filterQuery}
+                onValueChange={(value) => {
+                  setFilterQuery(value || "all");
+                  setCurrentPage(1);
+                }}
+              >
+                <SelectTrigger className="flex-1 sm:w-[220px] h-8 sm:h-9 text-xs sm:text-sm bg-white dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700">
+                  <SelectValue placeholder="Search Query" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Query</SelectItem>
+                  {searchQueries.map((query) => (
+                    <SelectItem key={query} value={query}>
+                      {query}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-            <Select
-              value={filterLocation}
-              onValueChange={(value) => {
-                setFilterLocation(value || "all");
-                setCurrentPage(1);
-              }}
-            >
-              <SelectTrigger className="w-[200px] h-9 text-sm bg-white dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700">
-                <SelectValue placeholder="Kota" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua Kota</SelectItem>
-                {cities.map((city) => (
-                  <SelectItem key={city} value={city}>
-                    {city}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <Select
+                value={filterLocation}
+                onValueChange={(value) => {
+                  setFilterLocation(value || "all");
+                  setCurrentPage(1);
+                }}
+              >
+                <SelectTrigger className="flex-1 sm:w-[200px] h-8 sm:h-9 text-xs sm:text-sm bg-white dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700">
+                  <SelectValue placeholder="Kota" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Kota</SelectItem>
+                  {cities.map((city) => (
+                    <SelectItem key={city} value={city}>
+                      {city}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         )}
 
-        {/* Table */}
+        {/* Table (desktop) and Cards (mobile) */}
         {businesses.length > 0 ? (
           <>
-            <div className="overflow-x-auto rounded-2xl border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+            {/* Desktop Table View - hidden on mobile */}
+            <div className="hidden md:block overflow-x-auto rounded-2xl border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-900">
               <table className="w-full table-fixed border-collapse bg-white dark:bg-zinc-900">
                 <colgroup>
                   {tableColumnWidths.map((width, index) => (
@@ -523,19 +527,138 @@ export default function DatabasePage() {
               </table>
             </div>
 
-            {/* Pagination */}
+            {/* Mobile Card View - shown only on mobile */}
+            <div className="md:hidden space-y-3">
+              {currentBusinesses.map((business, index) => (
+                <div
+                  key={business.id}
+                  className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
+                >
+                  {/* Card Header */}
+                  <div className="flex items-start justify-between gap-3 mb-3 pb-3 border-b border-zinc-100 dark:border-zinc-800">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                          #{startIndex + index + 1}
+                        </span>
+                        {business.search_query && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                            <SearchIcon className="h-2.5 w-2.5" />
+                            {business.search_query}
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-sm font-semibold text-zinc-900 dark:text-white line-clamp-2 leading-tight">
+                        {business.nama}
+                      </h3>
+                    </div>
+                  </div>
+
+                  {/* Card Body - Contact Info */}
+                  <div className="space-y-2.5 mb-3">
+                    {/* Location */}
+                    {business.lokasi && (
+                      <div className="flex items-start gap-2">
+                        <MapPin className="h-3.5 w-3.5 text-zinc-400 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
+                            {extractCity(business.lokasi)}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Contact */}
+                    {business.kontak && (
+                      <div className="flex items-center gap-2">
+                        <Phone className="h-3.5 w-3.5 text-zinc-400 flex-shrink-0" />
+                        <a
+                          href={`tel:${business.kontak}`}
+                          className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
+                        >
+                          {business.kontak}
+                        </a>
+                      </div>
+                    )}
+
+                    {/* Email */}
+                    {business.email && (
+                      <div className="flex items-center gap-2">
+                        <Mail className="h-3.5 w-3.5 text-zinc-400 flex-shrink-0" />
+                        <a
+                          href={`mailto:${business.email}`}
+                          className="text-xs text-blue-600 dark:text-blue-400 hover:underline truncate"
+                        >
+                          {business.email}
+                        </a>
+                      </div>
+                    )}
+
+                    {/* Website */}
+                    {business.website && (
+                      <div className="flex items-center gap-2">
+                        <Globe className="h-3.5 w-3.5 text-zinc-400 flex-shrink-0" />
+                        <a
+                          href={business.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 dark:text-blue-400 hover:underline truncate"
+                        >
+                          {extractDomain(business.website)}
+                        </a>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Card Actions */}
+                  <div className="flex items-center gap-1.5 pt-3 border-t border-zinc-100 dark:border-zinc-800">
+                    <Button
+                      onClick={() => {
+                        setViewingBusiness(business);
+                        setViewDialogOpen(true);
+                      }}
+                      variant="ghost"
+                      size="sm"
+                      className="flex-1 h-8 text-xs"
+                    >
+                      <Eye className="mr-1.5 h-3.5 w-3.5" />
+                      Lihat
+                    </Button>
+                    <Button
+                      onClick={() => handleEdit(business)}
+                      variant="ghost"
+                      size="sm"
+                      className="flex-1 h-8 text-xs"
+                    >
+                      <Pencil className="mr-1.5 h-3.5 w-3.5" />
+                      Edit
+                    </Button>
+                    <Button
+                      onClick={() => handleDeleteConfirm(business.id)}
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 px-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Pagination - responsive */}
             {filteredBusinesses.length > itemsPerPage && (
-              <div className="mt-6 flex items-center justify-center gap-2">
+              <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-2">
                 <Button
                   onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                   disabled={safeCurrentPage === 1}
                   variant="outline"
-                  className="h-9 px-3 text-sm disabled:opacity-50"
+                  className="w-full sm:w-auto h-8 sm:h-9 px-3 text-xs sm:text-sm disabled:opacity-50"
                 >
-                  Previous
+                  Sebelumnya
                 </Button>
                 
-                <div className="flex gap-1">
+                <div className="flex gap-1 flex-wrap justify-center">
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
                     if (
                       page === 1 ||
@@ -547,7 +670,7 @@ export default function DatabasePage() {
                           key={page}
                           onClick={() => setCurrentPage(page)}
                           variant={safeCurrentPage === page ? "default" : "outline"}
-                          className={`h-9 w-9 text-sm ${
+                          className={`h-8 w-8 sm:h-9 sm:w-9 text-xs sm:text-sm ${
                             safeCurrentPage === page
                               ? "bg-blue-600 text-white hover:bg-blue-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
                               : ""
@@ -558,7 +681,7 @@ export default function DatabasePage() {
                       );
                     } else if (page === safeCurrentPage - 2 || page === safeCurrentPage + 2) {
                       return (
-                        <span key={page} className="flex h-9 w-9 items-center justify-center text-zinc-400">
+                        <span key={page} className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center text-zinc-400 text-xs sm:text-sm">
                           ...
                         </span>
                       );
@@ -571,9 +694,9 @@ export default function DatabasePage() {
                   onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                   disabled={safeCurrentPage === totalPages}
                   variant="outline"
-                  className="h-9 px-3 text-sm disabled:opacity-50"
+                  className="w-full sm:w-auto h-8 sm:h-9 px-3 text-xs sm:text-sm disabled:opacity-50"
                 >
-                  Next
+                  Selanjutnya
                 </Button>
               </div>
             )}
@@ -606,30 +729,30 @@ export default function DatabasePage() {
         )}
       </div>
 
-      {/* View Detail Dialog */}
+      {/* View Detail Dialog - responsive */}
       <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
-        <DialogContent showCloseButton={false} className="max-h-[90vh] max-w-2xl overflow-hidden border border-zinc-200 bg-white p-0 dark:border-zinc-800 dark:bg-zinc-950">
+        <DialogContent showCloseButton={false} className="max-h-[90vh] w-[95vw] sm:w-full max-w-2xl overflow-hidden border border-zinc-200 bg-white p-0 dark:border-zinc-800 dark:bg-zinc-950">
           {viewingBusiness && (
-            <div className="max-h-[calc(90vh-80px)] space-y-6 overflow-y-auto px-6 py-6">
-              <div className="rounded-2xl border border-zinc-200 bg-zinc-50/80 p-5 dark:border-zinc-800 dark:bg-zinc-900/60">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0 space-y-3">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
+            <div className="max-h-[calc(90vh-60px)] sm:max-h-[calc(90vh-80px)] space-y-4 sm:space-y-6 overflow-y-auto px-4 py-4 sm:px-6 sm:py-6">
+              <div className="rounded-2xl border border-zinc-200 bg-zinc-50/80 p-4 sm:p-5 dark:border-zinc-800 dark:bg-zinc-900/60">
+                <div className="flex items-start justify-between gap-3 sm:gap-4">
+                  <div className="min-w-0 space-y-2 sm:space-y-3">
+                    <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
                       Lead Detail
                     </p>
-                    <h2 className="text-2xl font-semibold leading-tight text-zinc-950 dark:text-white sm:text-[28px]">
+                    <h2 className="text-xl sm:text-2xl font-semibold leading-tight text-zinc-950 dark:text-white">
                       {viewingBusiness.nama}
                     </h2>
-                    <div className="space-y-3">
+                    <div className="space-y-2 sm:space-y-3">
                       <div className="flex flex-wrap gap-2">
-                        <span className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300">
-                          <SearchIcon className="h-3.5 w-3.5" />
+                        <span className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-zinc-200 bg-white px-2.5 py-1 sm:px-3 sm:py-1.5 text-[10px] sm:text-xs font-medium text-zinc-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300">
+                          <SearchIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                           {viewingBusiness.search_query || "Search query belum tersedia"}
                         </span>
                       </div>
                       
-                      {/* Quick Action Shortcuts */}
-                      <div className="flex flex-wrap gap-2">
+                      {/* Quick Action Shortcuts - responsive */}
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2">
                         {/* Location Shortcut */}
                         {viewingBusiness.lokasi ? (
                           <a
@@ -639,17 +762,17 @@ export default function DatabasePage() {
                             }
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-100 text-green-600 transition-all hover:bg-green-200 hover:scale-110 dark:bg-green-950 dark:text-green-400 dark:hover:bg-green-900"
+                            className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-green-100 text-green-600 transition-all hover:bg-green-200 hover:scale-110 dark:bg-green-950 dark:text-green-400 dark:hover:bg-green-900"
                             title="Buka di Google Maps"
                           >
-                            <MapPin className="h-4 w-4" />
+                            <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           </a>
                         ) : (
                           <div
-                            className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 text-zinc-400 cursor-not-allowed dark:bg-zinc-800 dark:text-zinc-600"
+                            className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-zinc-100 text-zinc-400 cursor-not-allowed dark:bg-zinc-800 dark:text-zinc-600"
                             title="Lokasi tidak tersedia"
                           >
-                            <MapPin className="h-4 w-4" />
+                            <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           </div>
                         )}
                         
@@ -657,17 +780,17 @@ export default function DatabasePage() {
                         {viewingBusiness.kontak ? (
                           <a
                             href={`tel:${viewingBusiness.kontak}`}
-                            className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600 transition-all hover:bg-blue-200 hover:scale-110 dark:bg-blue-950 dark:text-blue-400 dark:hover:bg-blue-900"
+                            className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600 transition-all hover:bg-blue-200 hover:scale-110 dark:bg-blue-950 dark:text-blue-400 dark:hover:bg-blue-900"
                             title="Hubungi"
                           >
-                            <Phone className="h-4 w-4" />
+                            <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           </a>
                         ) : (
                           <div
-                            className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 text-zinc-400 cursor-not-allowed dark:bg-zinc-800 dark:text-zinc-600"
+                            className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-zinc-100 text-zinc-400 cursor-not-allowed dark:bg-zinc-800 dark:text-zinc-600"
                             title="Kontak tidak tersedia"
                           >
-                            <Phone className="h-4 w-4" />
+                            <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           </div>
                         )}
                         
@@ -675,17 +798,17 @@ export default function DatabasePage() {
                         {viewingBusiness.email ? (
                           <a
                             href={`mailto:${viewingBusiness.email}`}
-                            className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 text-purple-600 transition-all hover:bg-purple-200 hover:scale-110 dark:bg-purple-950 dark:text-purple-400 dark:hover:bg-purple-900"
+                            className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-purple-100 text-purple-600 transition-all hover:bg-purple-200 hover:scale-110 dark:bg-purple-950 dark:text-purple-400 dark:hover:bg-purple-900"
                             title="Kirim Email"
                           >
-                            <Mail className="h-4 w-4" />
+                            <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           </a>
                         ) : (
                           <div
-                            className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 text-zinc-400 cursor-not-allowed dark:bg-zinc-800 dark:text-zinc-600"
+                            className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-zinc-100 text-zinc-400 cursor-not-allowed dark:bg-zinc-800 dark:text-zinc-600"
                             title="Email tidak tersedia"
                           >
-                            <Mail className="h-4 w-4" />
+                            <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           </div>
                         )}
                         
@@ -695,47 +818,47 @@ export default function DatabasePage() {
                             href={viewingBusiness.website}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-100 text-orange-600 transition-all hover:bg-orange-200 hover:scale-110 dark:bg-orange-950 dark:text-orange-400 dark:hover:bg-orange-900"
+                            className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-orange-100 text-orange-600 transition-all hover:bg-orange-200 hover:scale-110 dark:bg-orange-950 dark:text-orange-400 dark:hover:bg-orange-900"
                             title="Buka Website"
                           >
-                            <Globe className="h-4 w-4" />
+                            <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           </a>
                         ) : (
                           <div
-                            className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 text-zinc-400 cursor-not-allowed dark:bg-zinc-800 dark:text-zinc-600"
+                            className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-zinc-100 text-zinc-400 cursor-not-allowed dark:bg-zinc-800 dark:text-zinc-600"
                             title="Website tidak tersedia"
                           >
-                            <Globe className="h-4 w-4" />
+                            <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           </div>
                         )}
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200">
-                    <SearchIcon className="h-5 w-5" />
+                  <div className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200">
+                    <SearchIcon className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-3">
-                <div id="location-card" className="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
+              <div className="grid grid-cols-1 gap-2.5 sm:gap-3">
+                <div id="location-card" className="rounded-2xl border border-zinc-200 bg-white p-3 sm:p-4 dark:border-zinc-800 dark:bg-zinc-950">
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 space-y-3">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
-                          <MapPin className="h-4 w-4" />
+                    <div className="flex-1 space-y-2 sm:space-y-3">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="flex h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
+                          <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
+                          <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
                             Lokasi
                           </p>
-                          <p className="text-sm font-medium text-zinc-950 dark:text-white">
+                          <p className="text-xs sm:text-sm font-medium text-zinc-950 dark:text-white">
                             {extractCity(viewingBusiness.lokasi) || "Belum tersedia"}
                           </p>
                         </div>
                       </div>
-                      <p className="text-sm leading-relaxed text-zinc-600 break-words dark:text-zinc-300">
+                      <p className="text-xs sm:text-sm leading-relaxed text-zinc-600 break-words dark:text-zinc-300">
                         {viewingBusiness.lokasi || "Alamat lengkap belum tersedia."}
                       </p>
                     </div>
@@ -747,31 +870,31 @@ export default function DatabasePage() {
                         }
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 transition-colors hover:bg-zinc-200 hover:text-blue-600 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-blue-400"
+                        className="flex h-8 w-8 sm:h-9 sm:w-9 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 transition-colors hover:bg-zinc-200 hover:text-blue-600 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-blue-400"
                         title="Buka di Google Maps"
                       >
-                        <ExternalLink className="h-4 w-4" />
+                        <ExternalLink className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </a>
                     )}
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
+                <div className="rounded-2xl border border-zinc-200 bg-white p-3 sm:p-4 dark:border-zinc-800 dark:bg-zinc-950">
                   <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
-                        <Phone className="h-4 w-4" />
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                      <div className="flex h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
+                        <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
+                        <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
                           Kontak
                         </p>
                         {viewingBusiness.kontak ? (
-                          <p className="text-sm font-medium text-zinc-950 dark:text-white break-words">
+                          <p className="text-xs sm:text-sm font-medium text-zinc-950 dark:text-white break-words">
                             {viewingBusiness.kontak}
                           </p>
                         ) : (
-                          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
                             Belum tersedia
                           </p>
                         )}
@@ -780,31 +903,31 @@ export default function DatabasePage() {
                     {viewingBusiness.kontak && (
                       <a
                         href={`tel:${viewingBusiness.kontak}`}
-                        className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 transition-colors hover:bg-zinc-200 hover:text-blue-600 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-blue-400"
+                        className="flex h-8 w-8 sm:h-9 sm:w-9 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 transition-colors hover:bg-zinc-200 hover:text-blue-600 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-blue-400"
                         title="Hubungi"
                       >
-                        <ExternalLink className="h-4 w-4" />
+                        <ExternalLink className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </a>
                     )}
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
+                <div className="rounded-2xl border border-zinc-200 bg-white p-3 sm:p-4 dark:border-zinc-800 dark:bg-zinc-950">
                   <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
-                        <Mail className="h-4 w-4" />
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                      <div className="flex h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
+                        <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
+                        <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
                           Email
                         </p>
                         {viewingBusiness.email ? (
-                          <p className="text-sm font-medium text-zinc-950 dark:text-white break-all">
+                          <p className="text-xs sm:text-sm font-medium text-zinc-950 dark:text-white break-all">
                             {viewingBusiness.email}
                           </p>
                         ) : (
-                          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
                             Belum tersedia
                           </p>
                         )}
@@ -813,31 +936,31 @@ export default function DatabasePage() {
                     {viewingBusiness.email && (
                       <a
                         href={`mailto:${viewingBusiness.email}`}
-                        className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 transition-colors hover:bg-zinc-200 hover:text-blue-600 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-blue-400"
+                        className="flex h-8 w-8 sm:h-9 sm:w-9 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 transition-colors hover:bg-zinc-200 hover:text-blue-600 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-blue-400"
                         title="Kirim Email"
                       >
-                        <ExternalLink className="h-4 w-4" />
+                        <ExternalLink className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </a>
                     )}
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
+                <div className="rounded-2xl border border-zinc-200 bg-white p-3 sm:p-4 dark:border-zinc-800 dark:bg-zinc-950">
                   <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
-                        <Globe className="h-4 w-4" />
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                      <div className="flex h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
+                        <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
+                        <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
                           Website
                         </p>
                         {viewingBusiness.website ? (
-                          <p className="text-sm font-medium text-zinc-950 dark:text-white truncate" title={viewingBusiness.website}>
+                          <p className="text-xs sm:text-sm font-medium text-zinc-950 dark:text-white truncate" title={viewingBusiness.website}>
                             {extractDomain(viewingBusiness.website)}
                           </p>
                         ) : (
-                          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
                             Belum tersedia
                           </p>
                         )}
@@ -848,10 +971,10 @@ export default function DatabasePage() {
                         href={viewingBusiness.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 transition-colors hover:bg-zinc-200 hover:text-blue-600 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-blue-400"
+                        className="flex h-8 w-8 sm:h-9 sm:w-9 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 transition-colors hover:bg-zinc-200 hover:text-blue-600 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-blue-400"
                         title="Buka Website"
                       >
-                        <ExternalLink className="h-4 w-4" />
+                        <ExternalLink className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </a>
                     )}
                   </div>
@@ -859,16 +982,16 @@ export default function DatabasePage() {
               </div>
 
               {viewingBusiness.scraped_at && (
-                <div className="rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-4 dark:border-zinc-800 dark:bg-zinc-900/60">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-zinc-700 dark:bg-zinc-950 dark:text-zinc-300">
-                      <Calendar className="h-4 w-4" />
+                <div className="rounded-2xl border border-zinc-200 bg-zinc-50 px-3 py-3 sm:px-4 sm:py-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-white text-zinc-700 dark:bg-zinc-950 dark:text-zinc-300">
+                      <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
+                      <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
                         Waktu Scrape
                       </p>
-                      <p className="text-sm text-zinc-800 dark:text-zinc-200">
+                      <p className="text-xs sm:text-sm text-zinc-800 dark:text-zinc-200">
                         {formatScrapedDate(viewingBusiness.scraped_at)}
                       </p>
                     </div>
@@ -878,11 +1001,11 @@ export default function DatabasePage() {
             </div>
           )}
           
-          <DialogFooter className="sticky bottom-0 border-t border-zinc-200 bg-white px-6 py-4 dark:border-zinc-800 dark:bg-zinc-950">
+          <DialogFooter className="sticky bottom-0 border-t border-zinc-200 bg-white px-4 py-3 sm:px-6 sm:py-4 dark:border-zinc-800 dark:bg-zinc-950">
             <Button 
               onClick={() => setViewDialogOpen(false)} 
               variant="outline"
-              className="mx-auto h-9 px-8 text-sm font-medium"
+              className="mx-auto h-8 px-6 sm:h-9 sm:px-8 text-xs sm:text-sm font-medium"
             >
               Tutup
             </Button>

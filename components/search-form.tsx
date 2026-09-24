@@ -145,49 +145,49 @@ export default function SearchForm() {
 
   return (
     <div className="w-full max-w-3xl">
-      {/* Logo */}
+      {/* Logo - responsive */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-12 text-center"
+        className="mb-6 sm:mb-8 md:mb-12 text-center"
       >
-        <h1 className="text-8xl font-normal text-zinc-900 dark:text-zinc-100">
+        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-normal text-zinc-900 dark:text-zinc-100">
           Digimaps
         </h1>
       </motion.div>
 
-      {/* Search Form */}
+      {/* Search Form - responsive */}
       <motion.form
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1 }}
         onSubmit={handleSubmit}
-        className="space-y-5"
+        className="space-y-4 sm:space-y-5"
       >
-        {/* Search Bar with Location Badge/Icon Toggle */}
+        {/* Search Bar with Location Badge/Icon Toggle - responsive */}
         <div className="relative">
-          <div className="flex h-14 items-center gap-3 rounded-full border border-zinc-300 bg-white px-5 shadow-sm transition-shadow hover:shadow-md focus-within:shadow-md dark:border-zinc-600 dark:bg-white">
+          <div className="flex h-12 sm:h-14 items-center gap-2 sm:gap-3 rounded-full border border-zinc-300 bg-white px-3 sm:px-5 shadow-sm transition-shadow hover:shadow-md focus-within:shadow-md dark:border-zinc-600 dark:bg-white">
             {/* Search Icon */}
-            <Search className="h-5 w-5 flex-shrink-0 text-zinc-400 dark:text-zinc-500" />
+            <Search className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 text-zinc-400 dark:text-zinc-500" />
 
-            {/* Search Input */}
+            {/* Search Input - responsive placeholder */}
             <input
               type="text"
-              placeholder="Search (e.g., Restaurant, Cafe, Hospital)"
+              placeholder="Cari (Restaurant, Cafe, Hospital)"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               disabled={globalScraping.isLoading}
-              className="flex-1 bg-transparent text-base outline-none placeholder:text-zinc-400 dark:text-zinc-900 dark:placeholder:text-zinc-500"
+              className="flex-1 bg-transparent text-sm sm:text-base outline-none placeholder:text-zinc-400 dark:text-zinc-900 dark:placeholder:text-zinc-500"
             />
 
-            {/* Location Badge OR MapPin Icon (Toggle) */}
+            {/* Location Badge OR MapPin Icon (Toggle) - responsive */}
             {hasLocation ? (
               <Badge
                 variant="secondary"
-                className="flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700 hover:bg-blue-100 dark:bg-blue-100 dark:text-blue-900 dark:hover:bg-blue-200"
+                className="flex items-center gap-1 sm:gap-1.5 rounded-full bg-blue-50 px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-medium text-blue-700 hover:bg-blue-100 dark:bg-blue-100 dark:text-blue-900 dark:hover:bg-blue-200"
               >
-                <MapPinIcon className="h-3.5 w-3.5" />
-                <span className="max-w-[150px] truncate">{city}, {province}</span>
+                <MapPinIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                <span className="max-w-[80px] sm:max-w-[150px] truncate">{city}</span>
                 <button
                   type="button"
                   onClick={(e) => {
@@ -196,7 +196,7 @@ export default function SearchForm() {
                   }}
                   className="ml-0.5 hover:text-blue-900 dark:hover:text-blue-950"
                 >
-                  <X className="h-3.5 w-3.5" />
+                  <X className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                 </button>
               </Badge>
             ) : (
@@ -206,16 +206,16 @@ export default function SearchForm() {
                   setCommandKey(prev => prev + 1); // Clear search saat popover dibuka
                 }
               }}>
-                <PopoverTrigger className="rounded-full p-2 text-rose-600 transition-colors hover:bg-zinc-100 dark:text-rose-600 dark:hover:bg-zinc-200" title="Select location">
-                  <MapPinIcon className="h-5 w-5" />
+                <PopoverTrigger className="rounded-full p-1.5 sm:p-2 text-rose-600 transition-colors hover:bg-zinc-100 dark:text-rose-600 dark:hover:bg-zinc-200" title="Select location">
+                  <MapPinIcon className="h-4 w-4 sm:h-5 sm:w-5" />
                 </PopoverTrigger>
-                <PopoverContent className="w-[320px] p-0" align="end">
+                <PopoverContent className="w-[280px] sm:w-[320px] p-0" align="end">
                   <Command key={commandKey} className="rounded-lg border-0">
                     <CommandInput 
-                      placeholder={step === "province" ? "Search province..." : "Search city..."}
+                      placeholder={step === "province" ? "Cari provinsi..." : "Cari kota..."}
                     />
                     <CommandList className="max-h-[280px]">
-                      <CommandEmpty>No results found.</CommandEmpty>
+                      <CommandEmpty>Tidak ditemukan.</CommandEmpty>
                       
                       {step === "province" ? (
                         <CommandGroup heading="Provinsi Indonesia">
@@ -247,7 +247,7 @@ export default function SearchForm() {
                               }}
                               className="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                             >
-                              ← Change Province
+                              ← Ganti Provinsi
                             </button>
                             <span className="text-xs text-zinc-500">{province}</span>
                           </div>
@@ -278,8 +278,8 @@ export default function SearchForm() {
           </div>
         </div>
 
-        {/* Submit Button with Animated Border */}
-        <div className="flex flex-col items-center gap-4 pt-3">
+        {/* Submit Button with Animated Border - responsive */}
+        <div className="flex flex-col items-center gap-3 sm:gap-4 pt-2 sm:pt-3">
           <div className="relative">
             {/* Animated Progress Ring with Gradient - Ultra Vibrant */}
             {globalScraping.isLoading && (
@@ -299,7 +299,7 @@ export default function SearchForm() {
             <Button
               type="submit"
               disabled={globalScraping.isLoading || !keyword || !city}
-              className={`relative h-11 w-36 rounded-full text-sm font-medium transition-all ${
+              className={`relative h-10 w-32 sm:h-11 sm:w-36 rounded-full text-xs sm:text-sm font-medium transition-all ${
                 globalScraping.isLoading || !keyword || !city
                   ? 'cursor-not-allowed opacity-100' 
                   : 'cursor-pointer'
@@ -311,12 +311,12 @@ export default function SearchForm() {
             >
               {/* Button Text - Force white with high specificity */}
               <span className="relative z-50 font-semibold text-white" style={{ color: '#ffffff !important' }}>
-                {globalScraping.isLoading ? `${Math.round(globalScraping.progress)}%` : "Search"}
+                {globalScraping.isLoading ? `${Math.round(globalScraping.progress)}%` : "Cari"}
               </span>
             </Button>
           </div>
 
-          {/* Status Text with Pulse Animation */}
+          {/* Status Text with Pulse Animation - responsive */}
           {globalScraping.isLoading && globalScraping.statusText && (
             <motion.div
               initial={{ opacity: 0, y: -5 }}
@@ -329,7 +329,7 @@ export default function SearchForm() {
                 transition={{ duration: 1, repeat: Infinity }}
                 className="h-2 w-2 rounded-full bg-[#F62477] dark:bg-bg-[#F62477]"
               />
-              <span className="text-sm text-zinc-600 dark:text-white">
+              <span className="text-xs sm:text-sm text-zinc-600 dark:text-white text-center px-4">
                 {globalScraping.statusText}
               </span>
             </motion.div>
