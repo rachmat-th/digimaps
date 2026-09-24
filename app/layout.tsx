@@ -11,6 +11,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   title: "Digimaps - Google Maps Lead Scraper",
   description: "Extract business data from Google Maps with ease. Scrape contact info, locations, and websites effortlessly.",
   openGraph: {
