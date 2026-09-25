@@ -1,122 +1,144 @@
 # Digimaps - Google Maps Business Scraper
 
-Ultra-clean web application for scraping business data from Google Maps with beautiful UI/UX.
+A clean, professional web application for scraping business data from Google Maps with an intuitive UI/UX.
 
 ## Features
 
-- 🎨 **Beautiful UI** - Google-like minimalist design with dark mode
-- 🔍 **Smart Scraping** - Playwright-powered scraper with stealth mode
-- 💾 **PostgreSQL Database** - Reliable data storage with full CRUD
+- 🎨 **Modern UI** - Minimalist Google-inspired design with dark mode support
+- 🔍 **Smart Scraping** - Playwright-powered scraper with stealth mode anti-detection
+- 💾 **PostgreSQL Database** - Reliable data storage with full CRUD operations
 - 📊 **Data Management** - Filter by search query & location, export to CSV
 - 🌙 **Dark Mode** - Seamless light/dark theme switching
-- 📱 **Responsive** - Works on all devices
+- 📱 **Responsive Design** - Works perfectly on desktop, tablet, and mobile
+- ⚡ **Real-time Progress** - Live scraping progress with streaming updates
 
 ## Tech Stack
 
 - **Frontend**: Next.js 15, TypeScript, Tailwind CSS, shadcn/ui, Framer Motion
-- **Backend**: Next.js API Routes, PostgreSQL
-- **Scraper**: Python 3, Playwright, BeautifulSoup4
+- **Backend**: Next.js API Routes
 - **Database**: PostgreSQL with `pg` driver
+- **Scraper**: Python 3, Playwright, Playwright Stealth, BeautifulSoup4
 
-## Getting Started
+## Prerequisites
 
-### Prerequisites
+- Node.js 18 or higher
+- Python 3.8 or higher
+- PostgreSQL 14 or higher
 
-- Node.js 18+ 
-- Python 3.8+
-- PostgreSQL 14+
+## Installation
 
-### Installation
+### 1. Clone the Repository
 
-1. **Clone the repository**
-   ```bash
-   git clone <repo-url>
-   cd digimaps
-   ```
+```bash
+git clone https://github.com/rachmat-th/digimaps.git
+cd digimaps
+```
 
-2. **Install Node dependencies**
-   ```bash
-   npm install
-   ```
+### 2. Install Node Dependencies
 
-3. **Install Python dependencies**
-   ```bash
-   # Create virtual environment
-   python3 -m venv venv
-   
-   # Install dependencies in venv
-   ./venv/bin/pip install -r scripts/requirements.txt
-   
-   # Install Playwright browser
-   ./venv/bin/playwright install chromium
-   ```
+```bash
+npm install
+```
 
-4. **Setup PostgreSQL Database**
-   ```bash
-   # Create database
-   psql -U postgres
-   CREATE DATABASE digimaps;
-   
-   # Create table
-   psql -U your_user -d digimaps
-   ```
-   ```sql
-   CREATE TABLE businesses (
-       id SERIAL PRIMARY KEY,
-       nama VARCHAR(500) NOT NULL,
-       lokasi VARCHAR(500),
-       email VARCHAR(255),
-       kontak VARCHAR(100),
-       website VARCHAR(500),
-       search_query VARCHAR(255),
-       scraped_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   );
-   
-   CREATE INDEX idx_nama ON businesses(nama);
-   CREATE INDEX idx_lokasi ON businesses(lokasi);
-   CREATE INDEX idx_search_query ON businesses(search_query);
-   CREATE INDEX idx_scraped_at ON businesses(scraped_at DESC);
-   CREATE INDEX idx_created_at ON businesses(created_at DESC);
-   ```
+### 3. Install Python Dependencies
 
-5. **Configure Environment Variables**
-   ```bash
-   cp .env.example .env.local
-   ```
-   
-   Edit `.env.local` with your database credentials:
-   ```env
-   DATABASE_URL=postgresql://your_user:your_password@localhost:5432/digimaps
-   ```
+```bash
+# Create virtual environment
+python3 -m venv venv
 
-6. **Run Development Server**
-   ```bash
-   npm run dev
-   ```
-   
-   Open [http://localhost:3000](http://localhost:3000)
+# Activate virtual environment
+source venv/bin/activate  # On macOS/Linux
+# or
+venv\Scripts\activate     # On Windows
+
+# Install dependencies
+pip install -r scripts/requirements.txt
+
+# Install Playwright browser
+playwright install chromium
+```
+
+### 4. Setup PostgreSQL Database
+
+```bash
+# Create database
+createdb digimaps
+
+# Or using psql
+psql -U postgres -c "CREATE DATABASE digimaps;"
+```
+
+Run the following SQL to create the table:
+
+```sql
+CREATE TABLE businesses (
+    id SERIAL PRIMARY KEY,
+    nama VARCHAR(500) NOT NULL,
+    lokasi VARCHAR(500),
+    maps_url TEXT,
+    email VARCHAR(255),
+    kontak VARCHAR(100),
+    website VARCHAR(500),
+    search_query VARCHAR(255),
+    scraped_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create indexes for better performance
+CREATE INDEX idx_nama ON businesses(nama);
+CREATE INDEX idx_lokasi ON businesses(lokasi);
+CREATE INDEX idx_search_query ON businesses(search_query);
+CREATE INDEX idx_scraped_at ON businesses(scraped_at DESC);
+CREATE INDEX idx_created_at ON businesses(created_at DESC);
+```
+
+### 5. Configure Environment Variables
+
+Copy the example environment file:
+
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local` with your configuration:
+
+```env
+# Database Configuration
+DATABASE_URL=postgresql://your_user:your_password@localhost:5432/digimaps
+
+# Python Path (path to Python in your venv)
+PYTHON_PATH=/path/to/your/project/venv/bin/python3
+```
+
+### 6. Run Development Server
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Usage
 
-### 1. Scraping Data
+### Scraping Data
 
-- Go to homepage
-- Enter keyword (e.g., "SMP Islam", "Restoran", "Hotel")
-- Select province and city
-- Click "Search" button
-- Wait for scraping progress
-- New records store `search_query` from the main search input only
-- Auto-redirected to database when complete
+1. Go to the homepage
+2. Enter a search keyword (e.g., "Restaurant", "Hospital", "Hotel")
+3. Click the location pin icon and select province and city
+4. Click the "Cari" (Search) button
+5. Watch the real-time scraping progress
+6. You'll be automatically redirected to the database page when complete
 
-### 2. Managing Data
+### Managing Data
 
-- Go to `/database` page
-- **Filter**: By search query or location
-- **Edit**: Click pencil icon to edit entry
-- **Delete**: Click trash icon to delete entry
-- **Export**: Click "Export CSV" to download data
+Navigate to `/database` to manage your scraped data:
+
+- **Filter**: Use dropdowns to filter by search query or location
+- **Edit**: Click the pencil icon to edit an entry
+- **Delete**: Click the trash icon to remove an entry
+- **Export**: Click "Export CSV" to download all data
+- **View Details**: Click on any business card/row to see full details
 
 ## Project Structure
 
@@ -124,52 +146,109 @@ Ultra-clean web application for scraping business data from Google Maps with bea
 digimaps/
 ├── app/
 │   ├── api/
-│   │   ├── businesses/      # CRUD API routes
-│   │   └── scrape/          # Scraping API
-│   ├── database/            # Database page
-│   └── page.tsx              # Homepage
+│   │   ├── businesses/          # Business CRUD API routes
+│   │   │   ├── route.ts         # GET (list) & POST (create)
+│   │   │   └── [id]/route.ts    # GET, PUT, DELETE by ID
+│   │   └── scrape/              # Scraping API
+│   │       ├── route.ts         # POST scrape endpoint
+│   │       └── status/route.ts  # GET scraping status
+│   ├── database/                # Database management page
+│   │   └── page.tsx
+│   ├── layout.tsx               # Root layout
+│   └── page.tsx                 # Homepage
 ├── components/
-│   ├── ui/                   # shadcn/ui components
-│   ├── search-form.tsx       # Search form
-│   └── theme-toggle.tsx      # Dark mode toggle
+│   ├── ui/                      # shadcn/ui components
+│   ├── search-form.tsx          # Main search form
+│   ├── theme-toggle.tsx         # Dark mode toggle
+│   └── global-loading-indicator.tsx
+├── contexts/
+│   └── scraping-context.tsx     # Global scraping state
 ├── lib/
-│   ├── db.ts                 # Database connection
-│   └── indonesia-cities.ts   # Location data
+│   ├── db.ts                    # Database utilities
+│   ├── indonesia-cities.ts      # Location data (provinces & cities)
+│   └── scraping-session.ts      # Scraping session management
 ├── scripts/
-│   └── scraper.py            # Python scraper
-└── public/
-    └── bg.jpg                # Light mode background
+│   ├── scraper.py               # Main Python scraper
+│   ├── scraper-streaming.py     # Streaming scraper variant
+│   └── requirements.txt         # Python dependencies
+├── public/
+│   ├── bg.jpg                   # Light mode background
+│   └── favicon files
+└── migrations/
+    └── add_maps_url.sql         # Database migration
 ```
 
-## Security Best Practices
+## How It Works
 
-✅ **Environment Variables** - Credentials stored in `.env.local` (not committed)  
-✅ **SQL Injection Protected** - Parameterized queries with `pg`  
-✅ **Input Validation** - Server-side validation on all API routes  
-✅ **HTTPS Ready** - Production deployment recommended with SSL  
+### Scraping Flow
 
-⚠️ **Important**: Never commit `.env.local` to version control!
+1. User submits search form (keyword + location)
+2. Next.js API route spawns Python scraper process
+3. Playwright opens Chromium in stealth mode
+4. Scraper searches Google Maps and extracts business data
+5. Data streams back as JSON lines
+6. API route inserts each business into PostgreSQL
+7. Real-time progress updates sent to frontend via Server-Sent Events
+8. User redirected to database page when complete
 
-## Deployment
+### Data Extraction
 
-### Vercel (Recommended)
+The scraper extracts:
+- Business name
+- Location/address
+- Google Maps URL
+- Email address (from website if available)
+- Contact number
+- Website URL
 
-1. Push to GitHub
-2. Import to Vercel
-3. Add environment variables in Vercel dashboard
-4. Deploy
+## Security
 
-### Database Hosting
+- ✅ Environment variables for sensitive data
+- ✅ SQL injection protection via parameterized queries
+- ✅ Input validation on all API routes
+- ✅ CORS protection
+- ✅ No hardcoded credentials
 
-- **Vercel Postgres** (recommended for Vercel deploy)
-- **Supabase** (free tier available)
-- **Railway** (PostgreSQL included)
-- **Self-hosted** (VPS with PostgreSQL)
+**Important**: Never commit `.env.local` or any files containing credentials to version control.
+
+## Performance Tips
+
+- **Database**: Add more indexes if filtering by additional columns
+- **Scraping**: Adjust `MAX_SCROLLS` in `scraper.py` for more/fewer results
+- **Concurrency**: Only one scraping session can run at a time (prevents rate limiting)
+
+## Troubleshooting
+
+### Scraper not working
+
+- Ensure Python virtual environment is activated
+- Verify `PYTHON_PATH` in `.env.local` points to venv Python
+- Check that Playwright Chromium is installed: `playwright install chromium`
+
+### Database connection errors
+
+- Verify PostgreSQL is running: `pg_isready`
+- Check `DATABASE_URL` format in `.env.local`
+- Ensure database `digimaps` exists
+
+### Port already in use
+
+- Change Next.js port: `npm run dev -- -p 3001`
+
+## Contributing
+
+This is a personal project, but suggestions and bug reports are welcome via GitHub Issues.
 
 ## License
 
-Private Project - All Rights Reserved
+MIT License - See LICENSE file for details
 
-## Author
+## Acknowledgments
 
-Built with ❤️ for efficient business data collection
+- Scraper inspired by [HasData/google-maps-scraper](https://github.com/gosom/google-maps-scraper)
+- UI components from [shadcn/ui](https://ui.shadcn.com/)
+- Built with [Next.js](https://nextjs.org/) and [Playwright](https://playwright.dev/)
+
+---
+
+**Note**: This tool is for educational and research purposes. Always respect Google's Terms of Service and robots.txt. Use responsibly.

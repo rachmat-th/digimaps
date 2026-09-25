@@ -1,18 +1,7 @@
 #!/usr/bin/env python3
 """
-🚀 PRODUCTION-GRADE GOOGLE MAPS SCRAPER
-==================================================
-Technology: Playwright + Stealth Mode
-Based on: HasData/google-maps-scraper (community-proven)
-Enhanced with: Human-like behavior + Email extraction + Checkpoints
-
-Target: Business
-Output: Nama | Lokasi | Email | Kontak | Website
-Requirement: Minimal Nama + (Email OR Kontak)
-
-Author: Enhanced for B2B Lead Generation
-Version: 2.0 Production
-==================================================
+Google Maps Business Scraper
+Extracts business information from Google Maps search results.
 """
 
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
@@ -23,54 +12,48 @@ import re
 import csv
 import os
 import json
+import sys
 from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# KONFIGURASI
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Configuration
+if len(sys.argv) > 1:
+    SEARCH_QUERY = ' '.join(sys.argv[1:])
+else:
+    SEARCH_QUERY = os.environ.get('SEARCH_QUERY', 'restaurant Jakarta')
 
-# Get search query from environment variable (for API integration)
-SEARCH_QUERY = os.environ.get('SEARCH_QUERY', 'SMP Islam Depok')
-SEARCH_QUERIES = [SEARCH_QUERY]  # Single query mode for API
+SEARCH_QUERIES = [SEARCH_QUERY]
 
-# Output paths
 OUTPUT_DIR = "/tmp"
 OUTPUT_CSV = f"{OUTPUT_DIR}/digimaps_scrape.csv"
 PROGRESS_LOG = f"{OUTPUT_DIR}/digimaps_progress.log"
 CHECKPOINT_FILE = f"{OUTPUT_DIR}/digimaps_checkpoint.json"
 
-# Scraping settings
 MAX_SCROLLS = 20
-SCROLL_PAUSE_MIN = 3  # Human-like delays
+SCROLL_PAUSE_MIN = 3
 SCROLL_PAUSE_MAX = 7
 
-# Human behavior settings
 HUMAN_MODE = True
 MIN_DELAY = 2
 MAX_DELAY = 5
 READ_PAUSE_CHANCE = 0.15  # 15% chance to "read" before continuing
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # LOGGING & UTILITIES
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 def log(message, level="INFO"):
-    """Log dengan timestamp"""
+    """Log message with timestamp"""
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     log_line = f"[{timestamp}] [{level}] {message}"
     
-    # Append to file
     with open(PROGRESS_LOG, 'a', encoding='utf-8') as f:
         f.write(log_line + "\n")
     
-    # Print to console
     print(log_line)
 
 
 def human_delay(min_s=None, max_s=None):
-    """Random delay untuk human-like behavior"""
+    """Random delay for human-like behavior"""
     if not HUMAN_MODE:
         time.sleep(0.5)
         return
@@ -81,11 +64,10 @@ def human_delay(min_s=None, max_s=None):
 
 def is_valid_business(text):
     """Accept all businesses - no filtering for Digimaps"""
-    return True  # Accept all business types
 
 
 def extract_email_from_text(text):
-    """Extract email dengan regex"""
+    """Extract email from text using regex"""
     if not text:
         return None
     
@@ -100,7 +82,7 @@ def extract_email_from_text(text):
 
 
 def scrape_website_for_email(url, timeout=8):
-    """Scrape website untuk cari email"""
+    """Scrape website to find email"""
     if not url or 'google.com' in url or 'maps' in url:
         return None
     
@@ -115,13 +97,11 @@ def scrape_website_for_email(url, timeout=8):
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
             
-            # Method 1: Find in text
             text = soup.get_text()
             email = extract_email_from_text(text)
             if email:
                 return email
             
-            # Method 2: mailto links
             for link in soup.find_all('a', href=True):
                 if 'mailto:' in link['href']:
                     return link['href'].replace('mailto:', '').strip()
@@ -132,12 +112,10 @@ def scrape_website_for_email(url, timeout=8):
         return None
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # CHECKPOINT MANAGEMENT
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 def load_checkpoint():
-    """Load checkpoint dari file"""
+    """Load checkpoint from file"""
     if os.path.exists(CHECKPOINT_FILE):
         try:
             with open(CHECKPOINT_FILE, 'r') as f:
@@ -148,7 +126,7 @@ def load_checkpoint():
 
 
 def save_checkpoint(data):
-    """Save checkpoint ke file"""
+    """Save checkpoint to file"""
     with open(CHECKPOINT_FILE, 'w') as f:
         json.dump(data, f, indent=2)
     log("💾 Checkpoint saved", "DEBUG")
@@ -181,9 +159,7 @@ def save_to_csv(businesses):
     return len(valid)
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # PLAYWRIGHT SCRAPING
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 def scroll_feed(page):
     """Scroll feed dengan human-like behavior"""
@@ -439,9 +415,7 @@ def scrape_query(page, query):
     return businesses
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # MAIN
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 def main():
     log("="*70)

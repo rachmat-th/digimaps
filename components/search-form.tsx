@@ -43,7 +43,6 @@ export default function SearchForm() {
     
     if (!keyword || !city || globalScraping.isLoading) return;
 
-    // Check if scraping already running
     try {
       const statusRes = await fetch('/api/scrape/status');
       const statusData = await statusRes.json();
@@ -61,7 +60,6 @@ export default function SearchForm() {
     globalScraping.setSearchInfo(keyword, city);
     
     try {
-      // Call scraping API with Server-Sent Events
       const response = await fetch('/api/scrape', {
         method: 'POST',
         headers: {

@@ -72,7 +72,6 @@ export default function DatabasePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Edit modal state
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingBusiness, setEditingBusiness] = useState<Business | null>(null);
   const [editForm, setEditForm] = useState({
@@ -85,15 +84,12 @@ export default function DatabasePage() {
     website: "",
   });
 
-  // Delete confirmation state
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingBusinessId, setDeletingBusinessId] = useState<number | null>(null);
 
-  // View detail modal state
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [viewingBusiness, setViewingBusiness] = useState<Business | null>(null);
 
-  // Fetch businesses from API
   useEffect(() => {
     fetchBusinesses();
   }, []);
@@ -224,7 +220,6 @@ export default function DatabasePage() {
     document.body.removeChild(link);
   };
 
-  // Open edit dialog
   const handleEdit = (business: Business) => {
     setEditingBusiness(business);
     setEditForm({
@@ -239,7 +234,6 @@ export default function DatabasePage() {
     setEditDialogOpen(true);
   };
 
-  // Save edited business
   const handleSaveEdit = async () => {
     if (!editingBusiness) return;
 
@@ -265,13 +259,11 @@ export default function DatabasePage() {
     }
   };
 
-  // Open delete confirmation
   const handleDeleteConfirm = (businessId: number) => {
     setDeletingBusinessId(businessId);
     setDeleteDialogOpen(true);
   };
 
-  // Delete business
   const handleDelete = async () => {
     if (!deletingBusinessId) return;
 

@@ -2,17 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { spawn } from 'child_process';
 import { insertBusiness } from '@/lib/db';
 import { startSession, endSession, isSessionRunning } from '@/lib/scraping-session';
+import path from 'path';
 
-const PYTHON_PATH = '/Users/leminahouse/Digimensi/lab/hermes/digimaps/venv/bin/python3';
-const SCRAPER_PATH = '/Users/leminahouse/Digimensi/lab/hermes/digimaps/scripts/scraper-streaming.py';
+const PYTHON_PATH = process.env.PYTHON_PATH || 'python3';
+const SCRAPER_PATH = path.join(process.cwd(), 'scripts', 'scraper-streaming.py');
 
 export async function POST(request: NextRequest) {
   try {
-    // Check if scraping already running
     if (isSessionRunning()) {
       return NextResponse.json(
         { error: 'Scraping is already in progress. Please wait until it completes.' },
-        { status: 409 } // Conflict
+        { status: 409 }
       );
     }
 
@@ -26,7 +26,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Start session lock
     const sessionStarted = startSession(keyword, city);
     if (!sessionStarted) {
       return NextResponse.json(
@@ -47,12 +46,10 @@ export async function POST(request: NextRequest) {
         async start(controller) {
           const encoder = new TextEncoder();
           
-          // Send initial status
           controller.enqueue(
             encoder.encode(`data: ${JSON.stringify({ status: 'starting', message: 'Initializing browser...' })}\n\n`)
           );
 
-          // Launch streaming scraper
           const python = spawn(PYTHON_PATH, [SCRAPER_PATH], {
             env: {
               ...process.env,
@@ -64,22 +61,19 @@ export async function POST(request: NextRequest) {
           let stderrBuffer = '';
           let imported = 0;
 
-          // Handle stdout (JSON lines - actual data)
           python.stdout.on('data', async (data) => {
             const text = data.toString();
             stdoutBuffer += text;
             
             const lines = stdoutBuffer.split('\n');
-            stdoutBuffer = lines.pop() || ''; // Keep incomplete line
+            stdoutBuffer = lines.pop() || '';
             
             for (const line of lines) {
               if (!line.trim()) continue;
               
               try {
-                // Parse JSON business data
                 const business = JSON.parse(line);
                 
-                // Insert to database immediately
                 await insertBusiness({
                   nama: business.nama,
                   lokasi: business.lokasi || null,
@@ -93,7 +87,6 @@ export async function POST(request: NextRequest) {
                 
                 imported++;
                 
-                // Send progress update
                 controller.enqueue(
                   encoder.encode(`data: ${JSON.stringify({ 
                     status: 'scraping', 
@@ -107,7 +100,6 @@ export async function POST(request: NextRequest) {
             }
           });
 
-          // Handle stderr (logs/status)
           python.stderr.on('data', (data) => {
             const text = data.toString();
             stderrBuffer += text;
@@ -131,7 +123,6 @@ export async function POST(request: NextRequest) {
           });
 
           python.on('close', async (code) => {
-            // Always end session when process closes
             endSession();
             
             if (code === 0) {
@@ -155,7 +146,6 @@ export async function POST(request: NextRequest) {
             controller.close();
           });
 
-          // Handle errors
           python.on('error', (error) => {
             console.error('Python process error:', error);
             endSession();
