@@ -4,13 +4,13 @@ A clean, professional web application for scraping business data from Google Map
 
 ## Features
 
-- 🎨 **Modern UI** - Minimalist Google-inspired design with dark mode support
-- 🔍 **Smart Scraping** - Playwright-powered scraper with stealth mode anti-detection
-- 💾 **PostgreSQL Database** - Reliable data storage with full CRUD operations
-- 📊 **Data Management** - Filter by search query & location, export to CSV
-- 🌙 **Dark Mode** - Seamless light/dark theme switching
-- 📱 **Responsive Design** - Works perfectly on desktop, tablet, and mobile
-- ⚡ **Real-time Progress** - Live scraping progress with streaming updates
+- **Modern UI** - Minimalist Google-inspired design with dark mode support
+- **Smart Scraping** - Playwright-powered scraper with stealth mode anti-detection
+- **PostgreSQL Database** - Reliable data storage with full CRUD operations
+- **Data Management** - Filter by search query & location, export to CSV
+- **Dark Mode** - Seamless light/dark theme switching
+- **Responsive Design** - Works perfectly on desktop, tablet, and mobile
+- **Real-time Progress** - Live scraping progress with streaming updates
 
 ## Tech Stack
 
@@ -203,11 +203,11 @@ The scraper extracts:
 
 ## Security
 
-- ✅ Environment variables for sensitive data
-- ✅ SQL injection protection via parameterized queries
-- ✅ Input validation on all API routes
-- ✅ CORS protection
-- ✅ No hardcoded credentials
+- Environment variables for sensitive data
+- SQL injection protection via parameterized queries
+- Input validation on all API routes
+- CORS protection
+- No hardcoded credentials
 
 **Important**: Never commit `.env.local` or any files containing credentials to version control.
 
